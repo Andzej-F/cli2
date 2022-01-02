@@ -69,20 +69,20 @@ class ProfileController extends \Core\Controller
         // print_r($patient);
         // print_r($argv);
 
-        echo "updateAction";
+        // echo "updateAction";
 
-        // if ($patient->updateProfile($argv)) {
+        if ($patient->updateProfile($argv['patient'])) {
 
-        //     echo ('Changes saved');
+            echo ('Changes saved');
 
-        //     View::render('Profile/show.php', [
-        //         'patient' => $patient
-        //     ]);
-        // } else {
-        //     View::render('Profile/edit.php', [
-        //         'patient' => $patient
-        //     ]);
-        // }
+            View::render('Profile/show.php', [
+                'patient' => $patient
+            ]);
+        } else {
+            View::render('Profile/edit.php', [
+                'patient' => $patient
+            ]);
+        }
     }
 
     /**

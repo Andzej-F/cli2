@@ -34,39 +34,32 @@ Would you like to change any other values?(type "yes" or "no")
 $router->dispatch("");
 
 */
-// $editing_commands = ["name", "surname", "email", "phone", "nid", "date", "time", "no"];
-// $exit_commands = ["profile_show", "index", "exit"];
+$editing_commands = ["name", "surname", "email", "phone", "nid", "date", "time", "no"];
+$exit_commands = ["profile_show", "index", "exit"];
 
 $command = readline("Please type a command: ");
-// $result == false;
-// while ($result === false) {
-//     if (in_array($command, $exit_commands)) {
-//         $router->dispatch($command);
-//         exit;
-//         // TODO switch
-//     } elseif ($command === "name") {
-//         $argv['patient']['name'] = readline("Change the name value: ");
-//         $router->dispatch("profile_update");
-//         exit;
-//     } else {
-//     }
-// }
+while (!in_array($command, $editing_commands) || !in_array($command, $exit_commands)) {
+    if (in_array($command, $exit_commands)) {
+        $router->dispatch($command);
+        exit;
+    } elseif ($command === "name") {
+        $argv['patient']['name'] = readline("Change the name value: ");
+        $router->dispatch("profile_update");
+        exit;
+    } elseif ($command === "surname") {
+        $argv['patient']['surname'] = readline("Change the surname value: ");
+        $router->dispatch("profile_update");
+        exit;
+    } elseif ($command === "email") {
+        $argv['patient']['email'] = readline("Change the email value: ");
+        $router->dispatch("profile_update");
+        exit;
+    }
 
-switch ($command) {
-    case "exit":
-        $router->dispatch("exit");
-        break;
-    case "name":
-        $router->dispatch("name");
-        break;
-    default:
-        $command = readline("Please type a command form the list: ");
+    $command = readline("Please type a correct command: ");
 }
 
-if ($command === "name") {
-    $argv['patient']['name'] = readline("Change the name value: ");
-    $router->dispatch("profile_update");
-}
+
 
 if ($command === "surname") {
     $argv['patient']['surname'] = readline("Change the surname value: ");

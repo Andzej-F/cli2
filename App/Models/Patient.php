@@ -183,11 +183,20 @@ class Patient extends \Core\Model
      * 
      * @return boolean True if the data was updated, false otherwise
      */
-    public function updateProfile($data)
+    public function updateProfile()
     {
         // Assign the values from the form to properties of the patient
-        $this->name = $data['name'];
-        $this->surname = $data['surname'];
+        // echo "kaip cia atrodo data\n";
+        // print_r($data);
+
+        // echo $this->name . "\n";
+        // echo $this->surname . "\n";
+        // echo $this->email . "\n";
+        // exit;
+
+        // $this->name = $data['name'];
+        // $this->surname = $data['surname'];
+        // $this->email = $data['email'];
 
         $this->validate();
 
