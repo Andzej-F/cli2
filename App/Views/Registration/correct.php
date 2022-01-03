@@ -16,8 +16,8 @@ echo "\n\033[0;35m Appointment details\n\033[0m";
 echo "\t1. Name: $patient->name\n";
 echo "\t2. Surname: $patient->surname\n";
 echo "\t3. Email address: $patient->surname\n";
-echo "\t4. Telephone number:\n";
-echo "\t5. National ID number:\n";
+echo "\t4. Telephone number: $patient->phone\n";
+echo "\t5. National ID number: $patient->nid\n";
 echo "\t6. Date:\n";
 echo "\t7. Time:\n";
 
@@ -33,9 +33,14 @@ if (!empty($patient->errors["email_errors"])) {
     $argv['patient']['email'] = readline("Please enter correct email: ");
 }
 
-// $argv['patient']['email'] = readline("Please enter your email address: ");
-// $argv['patient']['phone'] = readline("Please enter your telephone number: ");
-// $argv['patient']['national_id'] = readline("Please enter your national ID number: ");
+if (!empty($patient->errors["phone_errors"])) {
+    $argv['patient']['phone'] = readline("Please enter correct phone: ");
+}
+
+if (!empty($patient->errors["nid_errors"])) {
+    $argv['patient']['nid'] = readline("Please enter correct nid: ");
+}
+
 // $argv['patient']['date'] = readline("Please enter preferred appointment date(YYYY-MM-DD): ");
 // $argv['patient']['time'] = readline("Please enter preferred appointment time(HH-MM): ");
 

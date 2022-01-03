@@ -7,7 +7,7 @@ use \Core\View;
 /**
  * Home controller
  * 
- * PHP version 8.0.7
+ * PHP version 8.1.1
  */
 class HomeController extends \Core\Controller
 {
@@ -19,7 +19,16 @@ class HomeController extends \Core\Controller
      */
     public function indexAction()
     {
-        // echo "Hello from the " . __FUNCTION__ . " action in the " . __CLASS__ . " controller!";
         View::render('Home/index.php');
+    }
+
+    /**
+     * Exit the application
+     * 
+     * @return void
+     */
+    public function exitAction()
+    {
+        exit("Application closed");
     }
 }

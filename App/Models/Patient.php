@@ -18,7 +18,11 @@ class Patient extends \Core\Model
      */
     public $errors = [
         "name_errors" => [],
-        "surname_errors" => []
+        "surname_errors" => [],
+        "email_errors" => [],
+        "nid_errors" => [],
+        "date_errors" => [],
+        "time_errors" => []
     ];
 
     /**
@@ -37,13 +41,13 @@ class Patient extends \Core\Model
     }
 
     // /**
-    //  * Display the list of authors available in database
+    //  * Display the list of patients available in database
     //  * 
-    //  * @return array Return array of authors
+    //  * @return array Return array of patients
     //  */
     // public static function getAll()
     // {
-    //     $sql = 'SELECT * FROM `authors` WHERE 1
+    //     $sql = 'SELECT * FROM `patients` WHERE 1
     //             ORDER BY `surname`';
 
     //     $db = static::getDB();
@@ -68,8 +72,8 @@ class Patient extends \Core\Model
 
         if ($this->validationErrors($this->errors) === false) {
 
-            $sql = 'INSERT INTO `patients`(`name`, `surname`, `email`)
-                    VALUES (:name, :surname, :email)';
+            $sql = 'INSERT INTO `patients`(`name`, `surname`, `email`, `phone`, `nid`)
+                    VALUES (:name, :surname, :email,:phone, :nid)';
 
             $db = static::getDB();
 
@@ -78,6 +82,8 @@ class Patient extends \Core\Model
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':surname', $this->surname, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+            $stmt->bindValue(':phone', $this->phone, PDO::PARAM_INT);
+            $stmt->bindValue(':nid', $this->nid, PDO::PARAM_INT);
 
             // "PDOStatement::execute" method returns true on success or false on failure.
             return $stmt->execute();
@@ -152,22 +158,36 @@ class Patient extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors["email_errors"][] = "\033[01;31m Error: Not valid email address\033[0m";
         }
+
+        // Phone
+        if (preg_match('/\d+/', $this->phone) == false) {
+            echo "line 164, value $this->phone\n";
+            $this->errors["phone_errors"][] = "\033[01;31m Error: Not valid phone number\033[0m";
+        }
+
+        // National ID
+        if (preg_match('/\d+/', $this->nid) == false) {
+            // if (preg_match(('/\d+/'), ) === 0) {
+            echo "line 164, value $this->nid\n";
+            $this->errors["nid_errors"][] = "\033[01;31m Error: Not valid national ID number\033[0m";
+        }
     }
 
     /**
      * Find a patient model by email
      * 
-     * @param string $patient_id The patinet ID
+     * @param string $nid National ID number
      * 
      * @return mixed Patient object if found, false otherwise
      */
-    public static function findByEmail($email)
+    public static function findByNID($nid)
     {
-        $sql = 'SELECT * FROM `patients` WHERE email = :email';
+
+        $sql = 'SELECT * FROM `patients` WHERE nid = :nid';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':email', $email, PDO::PARAM_INT);
+        $stmt->bindValue(':nid', $nid, PDO::PARAM_INT);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -183,31 +203,34 @@ class Patient extends \Core\Model
      * 
      * @return boolean True if the data was updated, false otherwise
      */
-    public function updateProfile()
+    public function updateProfile($data)
     {
-        // Assign the values from the form to properties of the patient
-        // echo "kaip cia atrodo data\n";
-        // print_r($data);
 
-        // echo $this->name . "\n";
-        // echo $this->surname . "\n";
-        // echo $this->email . "\n";
-        // exit;
+        $this->name = $data['name'];
+        $this->surname = $data['surname'];
+        $this->email = $data['email'];
+        $this->phone = $data['phone'];
 
-        // $this->name = $data['name'];
-        // $this->surname = $data['surname'];
-        // $this->email = $data['email'];
+        // echo __LINE__ . "$this->name\n";
+        // echo __LINE__ . "$this->surname\n";
+        // echo __LINE__ . "$this->email\n";
+        // echo __LINE__ . "$this->phone\n";
+        // echo __LINE__ . "$this->nid\n";
 
+        // // exit;
         $this->validate();
+        // echo __LINE__;
 
         if ($this->validationErrors($this->errors) === false) {
 
             $sql = 'UPDATE `patients`
                     SET `name` = :name,
                         `surname` = :surname,
-                        `email` = :email
-                    WHERE `email` = :email';
-
+                        `email` = :email,
+                        `phone` = :phone
+                    WHERE `nid` = :nid';
+            // echo $sql;
+            // exit;
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -215,6 +238,8 @@ class Patient extends \Core\Model
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':surname', $this->surname, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+            $stmt->bindValue(':phone', $this->phone, PDO::PARAM_INT);
+            $stmt->bindValue(':nid', $this->nid, PDO::PARAM_INT);
 
             return $stmt->execute();
         }
@@ -227,15 +252,15 @@ class Patient extends \Core\Model
      *  
      * @return boolean True if the data was deleted, false otherwise
      */
-    public function deletePatient($email)
+    public function deletePatient()
     {
         $sql = 'DELETE FROM `patients`
-                    WHERE `email` = :email';
+                WHERE `nid` = :nid';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':email', $this->email, PDO::PARAM_INT);
+        $stmt->bindValue(':nid', $this->nid, PDO::PARAM_INT);
 
         return $stmt->execute();
     }

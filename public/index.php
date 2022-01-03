@@ -37,7 +37,7 @@ $router->add('registration_correct', ['controller' => 'RegistrationController', 
 $router->add('profile_show', ['controller' => 'ProfileController', 'action' => 'show']);
 $router->add('edit', ['controller' => 'ProfileController', 'action' => 'edit']);
 $router->add('profile_update', ['controller' => 'ProfileController', 'action' => 'update']);
-$router->add('profile_delete', ['controller' => 'ProfileController', 'action' => 'delete']);
+$router->add('delete', ['controller' => 'ProfileController', 'action' => 'delete']);
 
 $router->add('login', ['controller' => 'LoginController', 'action' => 'new']);
 $router->add('login_create', ['controller' => 'LoginController', 'action' => 'create']);

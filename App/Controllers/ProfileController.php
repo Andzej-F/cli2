@@ -13,6 +13,22 @@ use App\Models\Patient;
 class ProfileController extends \Core\Controller
 {
     /**
+     * Display user's details
+     * 
+     * @return void
+     */
+    public function showAction()
+    {
+        global $argv;
+
+        $patient = Patient::findByNID($argv['patient']['nid']);
+
+        View::render('Profile/show.php', [
+            'patient' => $patient
+        ]);
+    }
+
+    /**
      * Show the profile
      * 
      * @return void
@@ -21,9 +37,9 @@ class ProfileController extends \Core\Controller
     {
         global $argv;
 
-        $patient = new Patient();
+        $patient = Patient::findByNID($argv['patient']['nid']);
 
-        if ($patient->findByEmail($argv['patient']['email'])) {
+        if ($patient) {
 
             echo "Login successful\n";
 
@@ -46,7 +62,8 @@ class ProfileController extends \Core\Controller
     public function editAction()
     {
         global $argv;
-        $patient = new Patient($argv['patient']);
+
+        $patient = Patient::findByNID($argv['patient']['nid']);
 
         View::render(
             'Profile/edit.php',
@@ -65,20 +82,22 @@ class ProfileController extends \Core\Controller
     {
         global $argv;
 
-        $patient = new Patient($argv['patient']);
-        // print_r($patient);
         // print_r($argv);
 
-        // echo "updateAction";
+        $patient = Patient::findByNID($argv['patient']['nid']);
+
+        // print_r($patient);
+        // exit;
 
         if ($patient->updateProfile($argv['patient'])) {
 
-            echo ('Changes saved');
+            echo "Profile updated successfully\n";
 
             View::render('Profile/show.php', [
                 'patient' => $patient
             ]);
         } else {
+            echo "Line 100 ";
             View::render('Profile/edit.php', [
                 'patient' => $patient
             ]);
@@ -94,11 +113,11 @@ class ProfileController extends \Core\Controller
     {
         global $argv;
 
-        $patient = new Patient();
+        $patient = Patient::findByNID($argv['patient']['nid']);
 
-        if ($patient->deletePatient($argv['patient']['email'])) {
+        if ($patient->deletePatient()) {
 
-            echo "Appointment was successfully deleted";
+            echo "Profile was successfully deleted";
 
             View::render('Home/index.php');
         }

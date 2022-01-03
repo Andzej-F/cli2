@@ -11,13 +11,30 @@ echo "\t4. Telephone number:\n";
 echo "\t5. National ID number:\n";
 echo "\t6. Preferred date (YYYY-MM-DD):\n";
 echo "\t7. Preferred time (HH-MM, working hours 08-00 till 17-00):\n";
+echo "\t8. To provide the above information about yourself (type: \"provide\")\n";
+echo "\t9. Go to the main menu (type: \"index\")\n";
+echo "\t10. Exit the application (type: \"exit\")\n\n";
 
-$argv['patient']['name'] = readline("Please enter your name: ");
-$argv['patient']['surname'] = readline("Please enter your surname: ");
-$argv['patient']['email'] = readline("Please enter your email address: ");
+
 // $argv['patient']['phone'] = readline("Please enter your telephone number: ");
 // $argv['patient']['national_id'] = readline("Please enter your national ID number: ");
 // $argv['patient']['date'] = readline("Please enter preferred appointment date(YYYY-MM-DD): ");
 // $argv['patient']['time'] = readline("Please enter preferred appointment time(HH-MM): ");
 
-$router->dispatch("registration_create");
+$valid_commands = ["provide", "index", "exit"];
+
+$command = readline("Please type a command: ");
+while (!in_array($command, $valid_commands)) {
+    $command = readline("Please type a correct command: ");
+}
+
+if ($command === "provide") {
+    $argv['patient']['name'] = readline("Please enter your name: ");
+    $argv['patient']['surname'] = readline("Please enter your surname: ");
+    $argv['patient']['email'] = readline("Please enter your email address: ");
+    $argv['patient']['phone'] = readline("Please enter your phone number: ");
+    $argv['patient']['nid'] = readline("Please enter your national ID number: ");
+    $router->dispatch("registration_create");
+} else {
+    $router->dispatch($command);
+}

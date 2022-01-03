@@ -10,7 +10,7 @@ use \App\Models\Patient;
  * 
  * PHP version 8.0.7
  */
-class LoginController extends \Core\Controller
+class MedLoginController extends \Core\Controller
 {
 
     /**
@@ -20,7 +20,7 @@ class LoginController extends \Core\Controller
      */
     public function newAction()
     {
-        View::render('Login/new.php');
+        View::render('MedLogin/new.php');
     }
 
     /**
@@ -32,21 +32,16 @@ class LoginController extends \Core\Controller
     {
         global $argv;
 
-        $patient = Patient::findByNID($argv['patient']['nid']);
-
-        // print_r($patient);
-        // exit;
+        $patient = Patient::findByEmail($argv['patient']['email']);
 
         if ($patient) {
 
             echo "Login successful\n";
 
-            View::render('Profile/show.php', [
-                'patient' => $patient
-            ]);
+            View::render('Profile/show.php');
         } else {
 
-            echo "\n\nLogin unsuccessful, please try again\n\n";
+            echo "Login unsuccessful, please try again";
 
             View::render('Login/new.php', [
                 'patient' => $patient
