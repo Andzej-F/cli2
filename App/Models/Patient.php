@@ -72,8 +72,8 @@ class Patient extends \Core\Model
 
         if ($this->validationErrors($this->errors) === false) {
 
-            $sql = 'INSERT INTO `patients`(`name`, `surname`, `email`, `phone`, `nid`)
-                    VALUES (:name, :surname, :email,:phone, :nid)';
+            $sql = 'INSERT INTO `patients`(`name`, `surname`, `email`, `phone`, `nid`, `date`, `time`)
+                    VALUES (:name, :surname, :email,:phone, :nid, :date, :time)';
 
             $db = static::getDB();
 
@@ -84,6 +84,8 @@ class Patient extends \Core\Model
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':phone', $this->phone, PDO::PARAM_INT);
             $stmt->bindValue(':nid', $this->nid, PDO::PARAM_INT);
+            $stmt->bindValue(':date', $this->date, PDO::PARAM_STR);
+            $stmt->bindValue(':time', $this->time, PDO::PARAM_STR);
 
             // "PDOStatement::execute" method returns true on success or false on failure.
             return $stmt->execute();
@@ -155,21 +157,60 @@ class Patient extends \Core\Model
         }
 
         // Email
+        $this->email = trim($this->email);
+
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors["email_errors"][] = "\033[01;31m Error: Not valid email address\033[0m";
         }
 
         // Phone
-        if (preg_match('/\d+/', $this->phone) == false) {
-            echo "line 164, value $this->phone\n";
+        $this->phone = trim($this->phone);
+
+        if (preg_match('/^\d+$/', $this->phone) == false) {
             $this->errors["phone_errors"][] = "\033[01;31m Error: Not valid phone number\033[0m";
         }
 
         // National ID
-        if (preg_match('/\d+/', $this->nid) == false) {
-            // if (preg_match(('/\d+/'), ) === 0) {
-            echo "line 164, value $this->nid\n";
+        $this->nid = trim($this->nid);
+
+        if (preg_match('/^\d+$/', $this->nid) == false) {
             $this->errors["nid_errors"][] = "\033[01;31m Error: Not valid national ID number\033[0m";
+        }
+
+        // Date
+        $this->date = trim($this->date);
+        $today = date("Y-m-d");
+
+        if (preg_match('/^\d{4}-[0,1]\d-[0-3]\d$/', $this->date) == false) {
+            $this->errors["date_errors"][] = "\033[01;31m Error: wrong date format (correct format YYYY-MM-DD,\n please type hyphens as well, e.g. \"2022-05-18\")\033[0m";
+        } else {
+
+            $value = explode("-", $this->date);
+
+            if (is_array($value)) {
+                $month = (int)$value[1];
+                $day = (int)$value[2];
+
+                if (($month < 1) || ($month > 12)) {
+                    $this->errors["date_errors"][] = "\033[01;31m Error: month value must be between 1 and 12\n \033[0m";
+                }
+                if (($day < 0) || ($day > 31)) {
+                    $this->errors["date_errors"][] = "\033[01;31m Error: day value must be between 1 and 31\n \033[0m";
+                }
+            }
+        }
+
+        if (strtotime($this->date) !== false) {
+            if (strtotime($this->date) < strtotime($today)) {
+                $this->errors["date_errors"][] = "\033[01;31m Error: date set in the past\n \033[0m";
+            }
+        }
+
+        // Time
+        $this->time = trim($this->time);
+
+        if (preg_match('/^[0,1]\d:[0-5]\d$/', $this->time) == false) {
+            $this->errors["time_errors"][] = "\033[01;31m Error: wrong time format (correct format HH:MM, \nplease type colon as well, e.g. \"16:25\")\033[0m";
         }
     }
 
@@ -210,12 +251,8 @@ class Patient extends \Core\Model
         $this->surname = $data['surname'];
         $this->email = $data['email'];
         $this->phone = $data['phone'];
-
-        // echo __LINE__ . "$this->name\n";
-        // echo __LINE__ . "$this->surname\n";
-        // echo __LINE__ . "$this->email\n";
-        // echo __LINE__ . "$this->phone\n";
-        // echo __LINE__ . "$this->nid\n";
+        $this->date = $data['date'];
+        $this->time = $data['time'];
 
         // // exit;
         $this->validate();
@@ -227,10 +264,10 @@ class Patient extends \Core\Model
                     SET `name` = :name,
                         `surname` = :surname,
                         `email` = :email,
-                        `phone` = :phone
+                        `phone` = :phone,
+                        `date` = :date,
+                        `time` = :time
                     WHERE `nid` = :nid';
-            // echo $sql;
-            // exit;
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -240,6 +277,8 @@ class Patient extends \Core\Model
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':phone', $this->phone, PDO::PARAM_INT);
             $stmt->bindValue(':nid', $this->nid, PDO::PARAM_INT);
+            $stmt->bindValue(':date', $this->date, PDO::PARAM_STR);
+            $stmt->bindValue(':time', $this->time, PDO::PARAM_STR);
 
             return $stmt->execute();
         }

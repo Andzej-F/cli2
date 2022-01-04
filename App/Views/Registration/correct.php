@@ -18,8 +18,8 @@ echo "\t2. Surname: $patient->surname\n";
 echo "\t3. Email address: $patient->surname\n";
 echo "\t4. Telephone number: $patient->phone\n";
 echo "\t5. National ID number: $patient->nid\n";
-echo "\t6. Date:\n";
-echo "\t7. Time:\n";
+echo "\t6. Date: $patient->date\n";
+echo "\t7. Time: $patient->time\n";
 
 if (!empty($patient->errors["name_errors"])) {
     $argv['patient']['name'] = readline("Please enter correct name: ");
@@ -41,7 +41,12 @@ if (!empty($patient->errors["nid_errors"])) {
     $argv['patient']['nid'] = readline("Please enter correct nid: ");
 }
 
-// $argv['patient']['date'] = readline("Please enter preferred appointment date(YYYY-MM-DD): ");
-// $argv['patient']['time'] = readline("Please enter preferred appointment time(HH-MM): ");
+if (!empty($patient->errors["date_errors"])) {
+    $argv['patient']['date'] = readline("Please enter correct date(YYYY-MM-DD): ");
+}
+
+if (!empty($patient->errors["time_errors"])) {
+    $argv['patient']['time'] = readline("Please enter correct time(HH:MM): ");
+}
 
 $router->dispatch("registration_create");

@@ -74,6 +74,25 @@ class ProfileController extends \Core\Controller
     }
 
     /**
+     * Show the form for correcting the profile editing mistakes
+     * 
+     * @return void
+     */
+    public function correctAction()
+    {
+        global $argv;
+
+        $patient = Patient::findByNID($argv['patient']['nid']);
+
+        View::render(
+            'Profile/correct.php',
+            [
+                'patient' => $patient
+            ]
+        );
+    }
+
+    /**
      * Update the profile
      * 
      * @return void
@@ -97,7 +116,7 @@ class ProfileController extends \Core\Controller
                 'patient' => $patient
             ]);
         } else {
-            echo "Line 100 ";
+            // echo "Line 100 ";
             View::render('Profile/edit.php', [
                 'patient' => $patient
             ]);
@@ -117,7 +136,7 @@ class ProfileController extends \Core\Controller
 
         if ($patient->deletePatient()) {
 
-            echo "Profile was successfully deleted";
+            echo "\nProfile was successfully deleted\n";
 
             View::render('Home/index.php');
         }

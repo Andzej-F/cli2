@@ -36,6 +36,7 @@ $router->add('registration_correct', ['controller' => 'RegistrationController', 
 
 $router->add('profile_show', ['controller' => 'ProfileController', 'action' => 'show']);
 $router->add('edit', ['controller' => 'ProfileController', 'action' => 'edit']);
+$router->add('edit_correct', ['controller' => 'ProfileController', 'action' => 'correct']);
 $router->add('profile_update', ['controller' => 'ProfileController', 'action' => 'update']);
 $router->add('delete', ['controller' => 'ProfileController', 'action' => 'delete']);
 
@@ -46,7 +47,6 @@ $router->add('login_logout', ['controller' => 'LoginController', 'action' => 'lo
 $router->add('med_login', ['controller' => 'MedLoginController', 'action' => 'new']);
 $router->add('med_login_create', ['controller' => 'MedLoginController', 'action' => 'create']);
 $router->add('med_login_logout', ['controller' => 'MedLoginController', 'action' => 'logout']);
-
 
 // Show the main menu
 $router->dispatch("index");
