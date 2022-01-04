@@ -28,12 +28,12 @@ class Personnel extends \Core\Model
     //  * @return void
     //  */
 
-    // public function __construct($data = [])
-    // {
-    //     foreach ($data as $key => $value) {
-    //         $this->$key = $value;
-    //     }
-    // }
+    public function __construct($data = [])
+    {
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      * Find a personnel model by medical ID
@@ -55,5 +55,50 @@ class Personnel extends \Core\Model
         $stmt->execute();
 
         return $stmt->fetch();
+    }
+
+    /**
+     * Display a list of appointment dates
+     *  
+     * @return array $dates List of appointment dates
+     */
+    public static function showAppDates()
+    {
+        $sql = 'SELECT DISTINCT `date`
+                FROM `patients` WHERE 1 
+                ORDER BY `date` ASC';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        // $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        // $stmt->setFetchMode(PDO::FETCH_COLUMN);
+        $stmt->execute();
+        $dates = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        return $dates;
+    }
+
+    /**
+     * Display a list of appointment dates
+     *  
+     * @return array $dates List of appointment dates
+     */
+    public static function showAppDetails($date)
+    {
+        $sql = "SELECT * FROM `patients`
+                WHERE `date`=:date
+                ORDER BY `time` ASC";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':date', $date, PDO::PARAM_STR);
+
+        // $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        // $stmt->setFetchMode(PDO::FETCH_COLUMN);
+        $stmt->execute();
+        $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $details;
     }
 }

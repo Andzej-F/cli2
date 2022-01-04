@@ -34,9 +34,6 @@ class LoginController extends \Core\Controller
 
         $patient = Patient::findByNID($argv['patient']['nid']);
 
-        // print_r($patient);
-        // exit;
-
         if ($patient) {
 
             echo "Login successful\n";

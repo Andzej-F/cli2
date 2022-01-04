@@ -42,11 +42,12 @@ $router->add('delete', ['controller' => 'ProfileController', 'action' => 'delete
 
 $router->add('login', ['controller' => 'LoginController', 'action' => 'new']);
 $router->add('login_create', ['controller' => 'LoginController', 'action' => 'create']);
-$router->add('login_logout', ['controller' => 'LoginController', 'action' => 'logout']);
+$router->add('logout', ['controller' => 'LoginController', 'action' => 'logout']);
 
-$router->add('med_login', ['controller' => 'MedLoginController', 'action' => 'new']);
-$router->add('med_login_create', ['controller' => 'MedLoginController', 'action' => 'create']);
-$router->add('med_login_logout', ['controller' => 'MedLoginController', 'action' => 'logout']);
+$router->add('med_login', ['controller' => 'MedController', 'action' => 'login']);
+$router->add('med_menu', ['controller' => 'MedController', 'action' => 'showMenu']);
+$router->add('dates', ['controller' => 'MedController', 'action' => 'showDates']);
+$router->add('details', ['controller' => 'MedController', 'action' => 'showDetails']);
 
 // Show the main menu
 $router->dispatch("index");
