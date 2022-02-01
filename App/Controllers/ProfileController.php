@@ -101,12 +101,7 @@ class ProfileController extends \Core\Controller
     {
         global $argv;
 
-        // print_r($argv);
-
         $patient = Patient::findByNID($argv['patient']['nid']);
-
-        // print_r($patient);
-        // exit;
 
         if ($patient->updateProfile($argv['patient'])) {
 
@@ -116,7 +111,6 @@ class ProfileController extends \Core\Controller
                 'patient' => $patient
             ]);
         } else {
-            // echo "Line 100 ";
             View::render('Profile/edit.php', [
                 'patient' => $patient
             ]);
@@ -124,7 +118,7 @@ class ProfileController extends \Core\Controller
     }
 
     /**
-     * Delete the author
+     * Delete the profile
      * 
      * @return void
      */
